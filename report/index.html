@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your AI visibility check | Kestrel</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<style>
+body{margin:0;background:#E8EEF0;color:#17232B;font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:16px}
+img{height:40px;width:auto}
+p{color:#52636C;margin:14px 0 0}
+a{color:#22343F}
+</style>
+</head>
+<body>
+<main>
+  <img src="/assets/kestrel-mark.webp" width="159" height="120" alt="Kestrel">
+  <p id="msg">Loading your report&hellip;</p>
+  <noscript><p>Your browser has JavaScript turned off. <a id="nsl" href="https://askkestrel.ca/">Open askkestrel.ca</a> or email <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a> for a copy.</p></noscript>
+</main>
+<script>
+(function () {
+  var id = (new URLSearchParams(location.search).get('id') || '').replace(/[^a-z0-9]/gi, '').slice(0, 40);
+  var msg = document.getElementById('msg');
+  function fail(text) { msg.innerHTML = text + ' Email <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a> and we’ll send you a copy.'; }
+  if (!id) { fail('This report link is missing its code.'); return; }
+  fetch('https://automation.rootedai.ca/webhook/ai-report?id=' + encodeURIComponent(id))
+    .then(function (r) { return r.text(); })
+    .then(function (html) {
+      if (!html || html.indexOf('<html') === -1) { fail('This report couldn’t be loaded.'); return; }
+      document.open(); document.write(html); document.close();
+    })
+    .catch(function () { fail('This report couldn’t be loaded right now. Try again in a minute.'); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sample report | Kestrel</title>
+<meta name="description" content="See what a Kestrel AI visibility report looks like: your Kestrel Score, who the AI names instead of you, the questions we asked, and what to fix. Example business and numbers.">
+<link rel="canonical" href="https://askkestrel.ca/sample-report/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://askkestrel.ca/sample-report/">
+<meta property="og:title" content="Sample report | Kestrel">
+<meta property="og:description" content="What a Kestrel AI visibility report looks like, with an example business.">
+<meta property="og:image" content="https://askkestrel.ca/images/kestrel-hovering.webp">
+<meta name="theme-color" content="#17232B">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/k.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LDQDSE7P4C"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LDQDSE7P4C');</script>
+<style>
+/* The report itself, styled like a real Kestrel report */
+.sr{max-width:780px; margin:0 auto; padding:0 0 24px}
+.sr-note{background:var(--paper); border:1px dashed var(--slate); border-radius:14px; padding:14px 18px; margin:0 0 28px; font-size:16px}
+.sr-note b{font-family:var(--display)}
+.sr-head{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--paper); border:1px solid var(--line); border-bottom:0; border-radius:16px 16px 0 0; padding:12px 18px}
+.sr-head .logo span{font-size:20px}
+.sr-head .logo img{height:26px; width:auto}
+.sr-head small{color:var(--muted); font-size:14px}
+.sr-bars{height:7px; background:repeating-linear-gradient(90deg, var(--rufous) 0 30px, var(--ink) 30px 35px); margin-bottom:26px}
+.sr h1{font-size:clamp(32px, 6vw, 44px); font-weight:700; letter-spacing:-.025em}
+.sr .sub{color:var(--muted); margin:8px 0 22px}
+.sr .card{background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:24px; margin:0 0 18px}
+.sr h2{font-size:24px; font-weight:700; margin-bottom:12px}
+.sr .label{font:700 13px/1.2 var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--rufous); margin:0 0 6px}
+.sr .score{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+.sr .big{font:800 72px/1 var(--display); color:var(--rufous); letter-spacing:-.04em}
+.sr .big small{font-size:24px; color:var(--muted); font-weight:700; letter-spacing:0}
+.sr .score span{color:var(--muted)}
+.sr .headline{font:650 21px/1.3 var(--display); margin:16px 0 6px}
+.sr .muted{color:var(--muted); font-size:15px}
+.sr .engines{display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin-top:20px}
+.sr .eng{background:var(--sky); border-radius:12px; padding:12px 14px}
+.sr .eng b{display:block; font-size:14px; color:var(--muted); font-weight:400}
+.sr .eng span{font:700 24px/1.3 var(--display)}
+.sr .eng.zero span{color:var(--rufous)}
+.sr table{width:100%; border-collapse:collapse; font-size:16px}
+.sr th{text-align:left; font-size:13px; color:var(--muted); font-weight:700; padding:8px; border-bottom:2px solid var(--ink)}
+.sr td{padding:11px 8px; border-bottom:1px solid var(--line); vertical-align:top}
+.sr td.n,.sr th.n{text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums}
+.sr tr.you td{background:#F6E7E0; font-weight:700}
+.sr .tw{overflow-x:auto}
+.sr .fix h3{font-size:19px; font-weight:700; margin-bottom:6px}
+.sr .fix h3::before{content:""; display:inline-block; width:10px; height:10px; border-radius:50%; background:#2E6B45; margin-right:10px; vertical-align:2px}
+.sr .locked{list-style:none; margin:14px 0 16px; padding:0}
+.sr .locked li{display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--line)}
+.sr .locked li:first-child{border-top:0}
+.sr .lock{flex:none; width:30px; height:30px; border-radius:50%; background:var(--ink); display:grid; place-items:center; margin-top:2px}
+.sr .lock svg{width:13px; height:13px}
+.sr .locked .cat{display:block; font:700 12px/1.3 var(--display); letter-spacing:.06em; text-transform:uppercase; color:var(--rufous)}
+.sr .locked .blur{display:block; filter:blur(5px); user-select:none; color:var(--ink); font-size:16px}
+.sr .sites{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+.sr .sites .num{font:800 48px/1 var(--display)}
+.sr .sites p{margin:0; max-width:52ch}
+.sr ol{padding-left:22px; margin:8px 0 0}
+.sr ol li{margin:4px 0}
+.sr .divider{display:flex; align-items:center; gap:14px; margin:40px 0 20px; font:700 14px/1.2 var(--display); letter-spacing:.08em; text-transform:uppercase; color:var(--slate)}
+.sr .divider::before,.sr .divider::after{content:""; flex:1; border-top:2px dotted var(--slate)}
+.sr .quote{background:var(--sky); border-radius:12px; padding:14px 16px; font-size:16px; margin:10px 0}
+.sr .quote b{font-family:var(--display)}
+.sr .mark{background:#F6E7E0; font-weight:700; padding:0 3px; border-radius:3px}
+.sr .todo{list-style:none; margin:10px 0 0; padding:0}
+.sr .todo li{display:flex; justify-content:space-between; gap:12px; align-items:flex-start; padding:11px 0; border-top:1px solid var(--line); font-size:16px}
+.sr .todo li:first-child{border-top:0}
+.sr .pill{flex:none; font:700 12px/1 var(--display); padding:6px 10px; border-radius:999px; background:var(--sky); color:var(--slate-deep)}
+.sr .pill.you{background:#F6E7E0; color:var(--rufous)}
+.sr .chg{display:inline-block; font:700 13px/1 var(--display); background:#E3EFE7; color:#2E6B45; padding:6px 10px; border-radius:999px}
+.sr-cta{background:var(--slate-deep); color:#E6EDF0; border-radius:16px; padding:28px; margin-top:28px}
+.sr-cta h2{color:#fff}
+.sr-cta p{color:#C9D6DC; margin:10px 0 0}
+.sr-cta .btns{margin-top:20px}
+.sr-tabs{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 22px}
+.sr-tabs a{font:700 15px/1 var(--display); text-decoration:none; padding:11px 16px; border-radius:999px; border:1.5px solid var(--ink); color:var(--ink)}
+.sr-tabs a:hover{background:var(--ink); color:#fff}
+.sr-anchor{scroll-margin-top:-40px}
+.sr .chg{align-self:center}
+.sr .ff{border-top:1px solid var(--line); padding:16px 0 6px}
+.sr .ff:first-of-type{border-top:0}
+.sr .ff-top{display:flex; gap:12px; align-items:flex-start}
+.sr .ff-top > div{flex:1}
+.sr .ff-n{flex:none; width:28px; height:28px; border-radius:50%; background:var(--ink); color:#fff; font:700 14px/28px var(--display); text-align:center}
+.sr .ff .cat{display:block; font:700 12px/1.3 var(--display); letter-spacing:.06em; text-transform:uppercase; color:var(--rufous)}
+.sr .ff h3{font-size:18px; font-weight:700; margin:2px 0 0}
+.sr .ff p.blur,.sr .ff ol.blur{filter:blur(5px); user-select:none; margin:8px 0 0 40px; font-size:15px}
+.sr .ff ol.blur{padding-left:20px}
+.sr td .blur{filter:blur(5px); user-select:none}
+.sr .ok{color:#2E6B45; font-weight:700}
+.sr .miss{color:var(--rufous); font-weight:700}
+.sr .qlist{list-style:none; margin:12px 0 0; padding:0}
+.sr .qlist li{display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-top:1px solid var(--line); font-size:15px; margin:0}
+.sr .hist{display:flex; gap:14px; align-items:flex-end; height:150px; padding-top:10px}
+.sr .hist div{display:flex; flex-direction:column-reverse; align-items:center; gap:6px; width:60px; height:100%}
+.sr .hist span{display:block; width:36px; background:var(--rufous); border-radius:6px 6px 0 0}
+.sr .hist .next span{height:8%; background:var(--line)}
+.sr .hist i{font:700 15px/1 var(--display); font-style:normal}
+.sr .hist b{font-size:13px; color:var(--muted); font-weight:400}
+@media (max-width:560px){.sr .ff p.blur,.sr .ff ol.blur{margin-left:0}.sr .ff .pill{display:none}.sr .qlist li{flex-direction:column; gap:2px}}
+@media (max-width:560px){.sr .engines{grid-template-columns:repeat(2, minmax(0, 1fr))}.sr .big{font-size:56px}.sr table{font-size:14px}.sr th,.sr td{padding:9px 5px}.sr .card{padding:18px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Kestrel home"><img src="/assets/kestrel-mark.webp" width="159" height="120" alt=""><span>Kestrel</span></a>
+    <nav aria-label="Main">
+      <a href="/how-ai-search-works/">How AI search works</a>
+      <a href="/#check">The free check</a>
+      <a href="/#plans">Plans</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/#faq">Questions</a>
+      <a class="btn go" href="/#start">Get your free check</a>
+    </nav>
+  </div>
+</header>
+<div class="bars" aria-hidden="true"></div>
+<main>
+<section style="padding-top:56px">
+  <div class="wrap">
+  <div class="sr">
+    <h2 style="margin-bottom:12px">Sample report</h2>
+    <p class="lede" style="margin-bottom:18px">Two examples for the same business: the free check anyone can request, and the full monthly report you get on a Kestrel plan.</p>
+    <nav class="sr-tabs" aria-label="Sample reports"><a href="#free">Free check</a><a href="#full">Full report, with a plan</a></nav>
+    <p class="sr-note"><b>Example only.</b> The business, its competitors and the numbers are made up. Your report uses your town, your type of business and the real answers the AI apps gave.</p>
+
+    <div id="free" class="sr-anchor"></div>
+    <div class="sr-head"><span class="logo"><img src="/assets/kestrel-mark.webp" width="159" height="120" alt=""><span>Kestrel</span></span><small>Free AI visibility check</small></div>
+    <div class="sr-bars" aria-hidden="true"></div>
+
+    <h1>Harbourview Home Team</h1>
+    <p class="sub">Maplewood, Ontario. Checked October 21, 2026.</p>
+
+    <section class="card">
+      <p class="label">Your Kestrel Score</p>
+      <div class="score"><div class="big">22<small> / 100</small></div><span>Named in 8 of 36 AI answers</span></div>
+      <p class="muted" style="margin:8px 0 0">The Kestrel Score is how often AI apps recommend you: the share of answers that named your business.</p>
+      <p class="headline">You came up in 8 of 36 answers, while Northgate Realty was named in 27.</p>
+      <p class="muted" style="margin:0">ChatGPT and Gemini mention you now and then, but Claude never did, and Perplexity named you once. Agents with fewer Google reviews than you are being recommended more often, which points to gaps in where you appear online rather than in your reputation.</p>
+      <div class="engines">
+        <div class="eng"><b>ChatGPT</b><span>3 of 9</span></div>
+        <div class="eng"><b>Gemini</b><span>4 of 9</span></div>
+        <div class="eng"><b>Perplexity</b><span>1 of 9</span></div>
+        <div class="eng zero"><b>Claude</b><span>0 of 9</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Who the AI recommends instead</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Business</th><th class="n">Named in</th><th class="n">Google rating</th><th class="n">Reviews</th></tr></thead>
+        <tbody>
+          <tr class="you"><td>Harbourview Home Team (you)</td><td class="n">8 of 36</td><td class="n">4.9</td><td class="n">142</td></tr>
+          <tr><td>Northgate Realty</td><td class="n">27 of 36</td><td class="n">4.7</td><td class="n">88</td></tr>
+          <tr><td>Brookside Real Estate Group</td><td class="n">19 of 36</td><td class="n">4.8</td><td class="n">61</td></tr>
+          <tr><td>Stonebridge Properties</td><td class="n">12 of 36</td><td class="n">4.6</td><td class="n">39</td></tr>
+          <tr><td>Pinecrest Realty</td><td class="n">9 of 36</td><td class="n">5</td><td class="n">17</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted" style="margin:12px 0 0">Ratings and review counts from Google Maps on October 21, 2026.</p>
+    </section>
+
+    <section class="card fix">
+      <p class="label">A quick win</p>
+      <h3>Add "Real estate consultant" as a second category on your Google profile</h3>
+      <div>Your profile lists only "Real estate agency". Northgate and Brookside both use the extra category, and AI apps lean on these categories to decide who fits a question.</div>
+    </section>
+
+    <section class="card">
+      <h2>We found 5 more issues holding you back</h2>
+      <p class="muted" style="margin:0">Your full Kestrel report explains each one and the step-by-step fix.</p>
+      <ul class="locked">
+        <li><span class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z"/></svg></span><div><span class="cat">Listings</span><span class="blur" aria-hidden="true">Get listed on the two sites the AI cited most for agents here</span></div></li>
+        <li><span class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z"/></svg></span><div><span class="cat">Listings</span><span class="blur" aria-hidden="true">Fix the old phone number on your brokerage profile page</span></div></li>
+        <li><span class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z"/></svg></span><div><span class="cat">Website</span><span class="blur" aria-hidden="true">Add a page that answers who to call to sell a home in town</span></div></li>
+        <li><span class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z"/></svg></span><div><span class="cat">Website</span><span class="blur" aria-hidden="true">Put your service area and team names on the home page</span></div></li>
+        <li><span class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z"/></svg></span><div><span class="cat">Reviews</span><span class="blur" aria-hidden="true">Ask recent buyers to mention the neighbourhood in reviews</span></div></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>What the AI was reading</h2>
+      <div class="sites"><div class="num">11</div><p>different websites shaped these AI answers about your town and type of business. Your full report shows which ones, how much weight each carries, and whether you are on them.</p></div>
+    </section>
+
+    <section class="card">
+      <h2>How we checked</h2>
+      <p class="muted" style="margin:0">We asked ChatGPT, Gemini, Perplexity and Claude each of these questions three times, each in a fresh conversation, the way a customer in Maplewood would:</p>
+      <ol>
+        <li>Who is the best real estate agent in Maplewood, Ontario?</li>
+        <li>Recommend a real estate agent to help me sell my house in Maplewood, Ontario.</li>
+        <li>Recommend a real estate agent to help me buy a home in Maplewood, Ontario.</li>
+      </ol>
+    </section>
+
+    <div id="full" class="sr-anchor" style="height:56px"></div>
+    <div class="sr-head"><span class="logo"><img src="/assets/kestrel-mark.webp" width="159" height="120" alt=""><span>Kestrel</span></span><small>Monthly report · Fix &amp; Track plan</small></div>
+    <div class="sr-bars" aria-hidden="true"></div>
+
+    <h1>Harbourview Home Team</h1>
+    <p class="sub">Maplewood, Ontario. November 2026 report.</p>
+    <p class="sr-note" style="margin-top:-6px">This is what clients see in their Kestrel portal each month, and can download as a PDF. The details are blurred in this example.</p>
+
+    <section class="card">
+      <p class="label">Your Kestrel Score</p>
+      <div class="score"><div class="big">36<small> / 100</small></div><span class="chg">Up 14 since October</span></div>
+      <p class="muted" style="margin:8px 0 0">Named in 13 of 36 AI answers, up from 8.</p>
+      <p class="headline">Claude named you for the first time, and Perplexity now names you in 4 of 9 answers.</p>
+      <p style="margin:0">The new directory listings went live mid-month and two of the apps picked them up. Northgate is still named most for the selling question, so this month's top priority is a page that answers it directly.</p>
+      <div class="engines">
+        <div class="eng"><b>ChatGPT</b><span>4 of 9</span></div>
+        <div class="eng"><b>Gemini</b><span>3 of 9</span></div>
+        <div class="eng"><b>Perplexity</b><span>4 of 9</span></div>
+        <div class="eng"><b>Claude</b><span>2 of 9</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Who the AI named instead</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Business</th><th class="n">This month</th><th class="n">Last month</th></tr></thead>
+        <tbody>
+          <tr class="you"><td>Harbourview Home Team (you)</td><td class="n">13 of 36</td><td class="n">8 of 36</td></tr>
+          <tr><td>Northgate Realty</td><td class="n">25 of 36</td><td class="n">27 of 36</td></tr>
+          <tr><td>Brookside Real Estate Group</td><td class="n">17 of 36</td><td class="n">19 of 36</td></tr>
+          <tr><td>Stonebridge Properties</td><td class="n">11 of 36</td><td class="n">12 of 36</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2>Your fixes, in order of impact</h2>
+      <p class="muted" style="margin:0 0 6px">Each fix explains why it matters, using what the AI apps said, with the steps to do it. On Fix &amp; Track, Kestrel does the ones marked Kestrel. On Track, every fix is yours.</p>
+<div class="ff"><div class="ff-top"><span class="ff-n">1</span><div><span class="cat">Listings</span><h3>Get listed on the two directory sites the AI cites most for agents in Maplewood</h3></div><span class="pill">Kestrel</span></div><p class="blur" aria-hidden="true">These two sites shaped 23 of the 36 answers. Northgate and Brookside are on both. You are on neither.</p><ol class="blur" aria-hidden="true"><li>Create a profile on the first site with your team name, phone and website exactly as on Google</li><li>Add your service area, photos and a short bio for each agent</li><li>Repeat on the second site, then ask five recent clients to review you there</li></ol></div>
+<div class="ff"><div class="ff-top"><span class="ff-n">2</span><div><span class="cat">Website</span><h3>Add a "Selling your home in Maplewood" page</h3></div><span class="pill">Kestrel</span></div><p class="blur" aria-hidden="true">The selling question is where you are weakest: 1 of 12 answers. No page on your site answers it.</p><ol class="blur" aria-hidden="true"><li>Write a page covering your selling process, timeline and how you price a home</li><li>Name the neighbourhoods you sell in and link to recent sales</li><li>Add it to your menu and link it from your Google profile</li></ol></div>
+<div class="ff"><div class="ff-top"><span class="ff-n">3</span><div><span class="cat">Google Profile</span><h3>Add your service areas and a second category</h3></div><span class="pill">Kestrel</span></div><p class="blur" aria-hidden="true">Your profile lists one category and no service areas. The agents named most list both.</p><ol class="blur" aria-hidden="true"><li>Add "Real estate consultant" as a second category</li><li>Add Maplewood and the three nearby towns you serve as service areas</li><li>Rewrite the description to mention buying and selling in Maplewood</li></ol></div>
+<div class="ff"><div class="ff-top"><span class="ff-n">4</span><div><span class="cat">Reviews</span><h3>Ask recent buyers to mention the neighbourhood in reviews</h3></div><span class="pill you">You</span></div><p class="blur" aria-hidden="true">AI answers quoted reviews that named a street or neighbourhood. Few of yours do.</p><ol class="blur" aria-hidden="true"><li>Send your review link within a week of each closing</li><li>Ask clients to mention where they bought or sold</li><li>Reply to each review in a sentence that mentions the area</li></ol></div>
+<div class="ff"><div class="ff-top"><span class="ff-n">5</span><div><span class="cat">Listings</span><h3>Fix the old phone number on your brokerage profile page</h3></div><span class="pill you">You</span></div><p class="blur" aria-hidden="true">Your brokerage page still shows a number that differs from Google and your website.</p><ol class="blur" aria-hidden="true"><li>Ask your brokerage to update the phone number on your agent page</li><li>Check that your name and website match your Google profile exactly</li></ol></div>
+    </section>
+
+    <section class="card">
+      <h2>What the AI was reading</h2>
+      <p class="muted" style="margin:0 0 6px">The websites the AI apps leaned on to write their answers, how often, and how many of those answers named you. A site used often that rarely names you is usually one to get onto.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Website</th><th class="n">Used in</th><th class="n">Named you</th></tr></thead>
+        <tbody><tr><td><span class="blur" aria-hidden="true">realtordirectoryone.ca</span></td><td class="n">14 of 36</td><td class="n">6 of 14</td></tr><tr><td><span class="blur" aria-hidden="true">agentreviewsite.ca</span></td><td class="n">9 of 36</td><td class="n">0 of 9</td></tr><tr><td><span class="blur" aria-hidden="true">localnewssite.ca</span></td><td class="n">7 of 36</td><td class="n">4 of 7</td></tr><tr><td><span class="blur" aria-hidden="true">brokeragesite.ca</span></td><td class="n">6 of 36</td><td class="n">5 of 6</td></tr><tr><td><span class="blur" aria-hidden="true">homevaluationsite.ca</span></td><td class="n">5 of 36</td><td class="n">1 of 5</td></tr><tr><td><span class="blur" aria-hidden="true">Yelp-stylelistingsite.ca</span></td><td class="n">4 of 36</td><td class="n">0 of 4</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2>What the AI apps actually said</h2>
+      <p class="muted" style="margin:0">Every answer from all four apps is saved in your portal, question by question. Here's one:</p>
+      <div class="quote"><b>Perplexity</b>, asked "Recommend a real estate agent to help me sell my house in Maplewood, Ontario":<br>"For selling in Maplewood, <span class="mark">Harbourview Home Team</span> and Northgate Realty are both well reviewed. Harbourview is noted for strong communication and local market knowledge..."</div>
+      <ul class="qlist">
+        <li><span>"Who is the best real estate agent in Maplewood?"</span><span class="muted">Named you 6 of 12 times</span></li>
+        <li><span>"Recommend an agent to help me sell my house"</span><span class="muted">Named you 3 of 12 times</span></li>
+        <li><span>"Recommend an agent to help me buy a home"</span><span class="muted">Named you 4 of 12 times</span></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Your history</h2>
+      <div class="hist"><div><b>Oct</b><span style="height:44%"></span><i>22</i></div><div><b>Nov</b><span style="height:72%"></span><i>36</i></div><div class="next"><b>Dec</b><span></span><i>next</i></div></div>
+      <p class="muted" style="margin:10px 0 0">Your score each month, every past report, and a log of each fix as it's done, all in your Kestrel portal.</p>
+    </section>
+
+    <div class="sr-cta">
+      <h2>See your own numbers.</h2>
+      <p>Start with the free check for your own business and town. It's usually in your inbox within a couple of hours, and you can move to a plan whenever you're ready.</p>
+      <div class="btns"><a class="btn go" href="/#start">Get your free check</a><a class="btn line" href="/#plans" style="color:#fff;border-color:#fff">See the plans</a></div>
+    </div>
+  </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Kestrel home"><img src="/assets/kestrel-mark-light.webp" width="159" height="120" alt=""><span>Kestrel</span></a>
+    <nav aria-label="Footer">
+      <a href="/how-ai-search-works/">How AI search works</a>
+      <a href="/#start">Free check</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/sample-report/">Sample report</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="https://rootedworksco.ca/">Rooted Works Co.</a>
+    </nav>
+    <p>&copy; 2026 Kestrel, an AI visibility service from <a href="https://rootedworksco.ca/">Rooted Works Co.</a>, Orangeville, Ontario</p>
+  </div>
+</footer>
+<script src="/assets/k.js"></script>
+</body>
+</html>
