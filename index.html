@@ -23,6 +23,19 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDQDSE7P4C"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LDQDSE7P4C');</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Kestrel", "url": "https://askkestrel.ca/", "logo": "https://askkestrel.ca/assets/apple-touch-icon.png", "description": "Kestrel checks whether ChatGPT, Gemini, Perplexity and Claude recommend a local business, shows who gets named instead, and helps fix it with monthly tracking.", "areaServed": ["Canada"], "address": {"@type": "PostalAddress", "addressLocality": "Orangeville", "addressRegion": "ON", "addressCountry": "CA"}, "email": "info@askkestrel.ca", "parentOrganization": {"@type": "Organization", "name": "Rooted Works Co.", "url": "https://rootedworksco.ca/"}}</script>
+<style>
+/* Video section (added Nov 2026) */
+.watch{padding-top:0}
+.video-frame{position:relative; max-width:1040px; aspect-ratio:16/9; border-radius:20px; overflow:hidden; background:var(--ink); box-shadow:0 24px 60px rgba(23,35,43,.18)}
+.video-frame video{display:block; width:100%; height:100%; object-fit:cover; background:var(--ink)}
+.video-play{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:14px; width:100%; border:0; padding:0; cursor:pointer; background:linear-gradient(0deg, rgba(23,35,43,.55), rgba(23,35,43,0) 55%); color:#fff; font:600 18px/1.2 var(--display)}
+.video-play span{display:flex; align-items:center; justify-content:center; width:84px; height:84px; border-radius:50%; background:var(--rufous); box-shadow:0 10px 30px rgba(0,0,0,.25); transition:transform .15s}
+.video-play:hover span,.video-play:focus-visible span{transform:scale(1.08)}
+.video-play:focus-visible{outline:3px solid var(--rufous); outline-offset:-3px}
+.video-play em{position:absolute; left:24px; bottom:20px; font-style:normal}
+.video-frame.playing .video-play{display:none}
+@media (max-width:600px){.video-frame{border-radius:14px}.video-play span{width:64px; height:64px}.video-play em{left:16px; bottom:14px; font-size:16px}}
+</style>
 </head>
 <body>
 <header class="top">
@@ -73,6 +86,34 @@
     </figure>
   </div>
 </section>
+
+<section class="watch" aria-labelledby="watch-h">
+  <div class="wrap">
+    <div class="head">
+      <p class="kicker">Watch: 5 minutes</p>
+      <h2 id="watch-h">How Kestrel works</h2>
+      <p class="lede">Dave Raney, Kestrel's founder, explains how AI is changing the way customers find businesses, then walks through the report, the client portal and the plans.</p>
+    </div>
+    <div class="video-frame">
+      <video id="kestrel-video" preload="none" playsinline poster="/images/video-poster.webp" width="1920" height="1080" aria-label="How Kestrel works, a 5-minute video">
+        <source src="https://media.askkestrel.ca/kestrel-video.mp4" type="video/mp4">
+        <p>Your browser can't play this video. <a href="https://media.askkestrel.ca/kestrel-video.mp4">Download it here</a>.</p>
+      </video>
+      <button class="video-play" type="button" aria-label="Play the video: How Kestrel works, 5 minutes">
+        <span aria-hidden="true"><svg width="30" height="34" viewBox="0 0 30 34"><path d="M3 2.5v29L28 17z" fill="#fff"/></svg></span>
+        <em aria-hidden="true">How Kestrel works · 5:13</em>
+      </button>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var f=document.querySelector('.video-frame'); if(!f) return;
+  var v=f.querySelector('video'), b=f.querySelector('.video-play');
+  b.addEventListener('click',function(){ f.classList.add('playing'); v.controls=true; v.play(); v.focus(); });
+  v.addEventListener('play',function(){ f.classList.add('playing'); v.controls=true; });
+})();
+</script>
 
 <section class="band" aria-labelledby="shift-h">
   <div class="wrap">
