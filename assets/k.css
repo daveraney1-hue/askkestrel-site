@@ -215,6 +215,7 @@ textarea{min-height:110px; resize:vertical}
 footer{background:var(--ink); color:#AFC0C8; padding-block:48px; font-size:15px}
 footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px; align-items:center}
 footer a{color:#fff}
+footer address.biz{font-style:normal; flex-basis:100%; line-height:1.6}
 footer .logo{color:#fff}
 footer .logo img{height:34px; width:auto}
 footer .logo span{font-size:22px}
