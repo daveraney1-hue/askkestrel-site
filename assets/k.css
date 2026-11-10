@@ -46,10 +46,11 @@ section{padding-block:96px}
 .logo img{height:40px; width:auto}
 .logo span{font-family:var(--display); font-weight:800; font-size:26px; letter-spacing:-.02em}
 .top nav{display:flex; align-items:center; gap:26px; font-size:16px}
-.top nav a{text-decoration:none; color:var(--ink)}
+.top nav a{text-decoration:none; color:var(--ink); white-space:nowrap}
 .top nav a:hover{color:var(--rufous)}
 .top nav a[aria-current]{color:var(--rufous)}
-@media (max-width:880px){.top nav a:not(.btn){display:none}}
+@media (max-width:1180px){.top nav{gap:18px; font-size:15px}}
+@media (max-width:1000px){.top nav a:not(.btn){display:none}}
 
 /* buttons */
 .btn{display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 22px; border-radius:999px; font:600 17px/1.2 var(--display); text-decoration:none; border:2px solid var(--ink); cursor:pointer}
