@@ -267,9 +267,9 @@
     </div>
     </details>
     <div class="plan-btns">
-      <a class="btn line" href="mailto:info@askkestrel.ca?subject=Start%20the%20Track%20plan" data-plan="track">Start with Track</a>
-      <a class="btn go" href="mailto:info@askkestrel.ca?subject=Start%20the%20Fix%20%26%20Track%20plan" data-plan="fix_track">Start with Fix &amp; Track</a>
-      <a class="btn line" href="mailto:info@askkestrel.ca?subject=Start%20the%20Grow%20plan" data-plan="grow">Start with Grow</a>
+      <a class="btn line" href="/pricing/?plan=track#map">Start with Track</a>
+      <a class="btn go" href="/pricing/?plan=fix_track#map">Start with Fix &amp; Track</a>
+      <a class="btn line" href="/pricing/?plan=grow#map">Start with Grow</a>
     </div>
     <p class="note">Fix &amp; Track and Grow take only three businesses of each type in each area. <a href="/pricing/">See prices and open spots for your area</a>. Questions? Email <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a>.</p>
   </div>
@@ -366,53 +366,6 @@
     </form>
   </div>
 </section>
-<dialog id="signup" class="signup" aria-labelledby="signup-h">
-  <div class="signup-head">
-    <h2 id="signup-h">Sign up for Kestrel</h2>
-    <button type="button" class="signup-x" data-close aria-label="Close">&times;</button>
-  </div>
-  <form data-signup novalidate>
-    <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <fieldset class="plan-pick">
-      <legend>Plan</legend>
-      <label><input type="radio" name="plan" value="track"><span><b>Track</b><small>You watch, we report</small></span></label>
-      <label><input type="radio" name="plan" value="fix_track"><span><b>Fix &amp; Track</b><small>We do the work</small></span></label>
-      <label><input type="radio" name="plan" value="grow"><span><b>Grow</b><small>Pull ahead of competitors</small></span></label>
-    </fieldset>
-    <div class="row">
-      <label for="s-name">Your name<input id="s-name" name="name" autocomplete="name" required></label>
-      <label for="s-biz">Business name<input id="s-biz" name="business" autocomplete="organization" required></label>
-    </div>
-    <div class="row">
-      <label for="s-email">Email<input id="s-email" name="email" type="email" autocomplete="email" required></label>
-      <label for="s-phone"><span>Phone <small>(optional)</small></span><input id="s-phone" name="phone" type="tel" autocomplete="tel"></label>
-    </div>
-    <fieldset class="plan-pick area-pick">
-      <legend>Where do your customers come from?</legend>
-      <label><input type="radio" name="scope" value="local" checked><span><b>One town or city</b><small>e.g. Orangeville</small></span></label>
-      <label><input type="radio" name="scope" value="region"><span><b>A region or province</b><small>e.g. the GTA or Ontario</small></span></label>
-      <label><input type="radio" name="scope" value="national"><span><b>All of Canada</b><small>Online or national businesses</small></span></label>
-    </fieldset>
-    <div class="row">
-      <label for="s-town"><span data-area-label>Town or city you serve</span><input id="s-town" name="town" list="k-places" autocomplete="address-level2" placeholder="e.g. Orangeville" required></label>
-      <label for="s-type">Type of business<input id="s-type" name="business_type" list="k-types" autocomplete="off" placeholder="Start typing, e.g. Family lawyers"></label>
-      <datalist id="k-places"></datalist><datalist id="k-types"></datalist>
-    </div>
-    <label for="s-site"><span>Website <small>(optional)</small></span><input id="s-site" name="website" type="url" autocomplete="url" placeholder="https://"></label>
-    <label for="s-notes"><span>Anything we should know? <small>(optional)</small></span><textarea id="s-notes" name="notes" rows="3" placeholder="Questions, your main competitors, the best time to reach you..."></textarea></label>
-    <p class="form-note">Nothing is charged yet. We'll confirm the details and send a secure payment link, usually within one business day. See our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p>
-    <label class="check" for="s-news"><input id="s-news" name="newsletter" type="checkbox" value="yes"><span>Yes, send me occasional emails from Kestrel about getting found in AI search. I can unsubscribe at any time.</span></label>
-    <div><button class="btn go" type="submit">Send my sign-up</button></div>
-    <p class="status" role="status" aria-live="polite"></p>
-  </form>
-  <div class="signup-done" hidden>
-    <p class="done-mark" aria-hidden="true">&#10003;</p>
-    <h3>Thanks, you're signed up.</h3>
-    <p>We've emailed a confirmation to <b data-done-email></b>. We'll be in touch shortly, usually within one business day, with your payment link and next steps.</p>
-    <p>Didn't get the email? Check your spam folder, or write to <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a>.</p>
-    <div><button type="button" class="btn line" data-close>Close</button></div>
-  </div>
-</dialog>
 </main>
 <footer>
   <div class="wrap">
@@ -431,6 +384,6 @@
     <p>&copy; 2026 Kestrel AI Search, an AI visibility service from <a href="https://rootedworksco.ca/">Rooted Works Co.</a></p>
   </div>
 </footer>
-<script src="/assets/k.js?v=20261110c"></script>
+<script src="/assets/k.js?v=20261110d"></script>
 </body>
 </html>

@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
 <link rel="stylesheet" href="/assets/k.css?v=20261110b">
-<link rel="stylesheet" href="/assets/pricing.css">
+<link rel="stylesheet" href="/assets/pricing.css?v=20261110d">
 <link rel="preload" href="/assets/map/provinces.json" as="fetch" crossorigin>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDQDSE7P4C"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LDQDSE7P4C');</script>
@@ -113,8 +113,8 @@
 <section id="map" class="pr-map" aria-labelledby="map-h" data-pricing-map>
   <div class="wrap">
     <div class="head">
-      <h2 id="map-h">Find your area</h2>
-      <p class="lede">Choose your type of business, then find your town to see its prices and how many spots are open.</p>
+      <h2 id="map-h">Find your area, and sign up</h2>
+      <p class="lede">Choose your type of business, then find your town to see its prices and how many spots are open. Choose it as your home area, add any towns around you, and sign up below the map.</p>
     </div>
     <div class="map-controls">
       <div class="combo">
@@ -142,9 +142,25 @@
           <li><span class="sw t-m"></span>Mid-size city</li>
           <li><span class="sw t-b"></span>Big city</li>
           <li><span class="sw full"></span>No spots left</li>
+          <li><span class="sw home"></span>Your home area</li>
+          <li><span class="sw extra"></span>Your extra areas</li>
         </ul>
       </div>
       <aside class="area-card" aria-live="polite" aria-label="Prices for the chosen area"></aside>
+    </div>
+    <div id="sign-up" class="order" data-order aria-labelledby="order-h">
+      <h3 id="order-h">Your plan</h3>
+      <fieldset class="plan-pick">
+        <legend>Plan</legend>
+        <label><input type="radio" name="order-plan" value="track"><span><b>Track</b><small>You watch, we report</small></span></label>
+        <label><input type="radio" name="order-plan" value="fix_track"><span><b>Fix &amp; Track</b><small>We do the work</small></span></label>
+        <label><input type="radio" name="order-plan" value="grow"><span><b>Grow</b><small>Pull ahead of competitors</small></span></label>
+      </fieldset>
+      <div class="ord-body" data-order-body></div>
+      <div class="ord-actions">
+        <button type="button" class="btn go" data-order-next>Continue to your details</button>
+        <p class="status" role="status" aria-live="polite"></p>
+      </div>
     </div>
   </div>
 </section>
@@ -189,7 +205,39 @@
     <p>&copy; 2026 Kestrel AI Search, an AI visibility service from <a href="https://rootedworksco.ca/">Rooted Works Co.</a></p>
   </div>
 </footer>
-<script src="/assets/k.js?v=20261110c"></script>
-<script src="/assets/pricing.js" defer></script>
+<dialog id="signup" class="signup" aria-labelledby="signup-h">
+  <div class="signup-head">
+    <h2 id="signup-h">Your details</h2>
+    <button type="button" class="signup-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <form data-signup novalidate>
+    <p class="order-sum" data-order-sum></p>
+    <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div class="row">
+      <label for="s-name">Your name<input id="s-name" name="name" autocomplete="name" required></label>
+      <label for="s-biz">Business name<input id="s-biz" name="business" autocomplete="organization" required></label>
+    </div>
+    <div class="row">
+      <label for="s-email">Email<input id="s-email" name="email" type="email" autocomplete="email" required></label>
+      <label for="s-phone"><span>Phone <small>(optional)</small></span><input id="s-phone" name="phone" type="tel" autocomplete="tel"></label>
+    </div>
+    <label for="s-desc"><span>How would you describe your business? <small>(optional)</small></span><input id="s-desc" name="business_type" placeholder="e.g. family law firm, cosmetic dentist"></label>
+    <label for="s-site"><span>Website <small>(optional)</small></span><input id="s-site" name="website" type="url" autocomplete="url" placeholder="https://"></label>
+    <label for="s-notes"><span>Anything we should know? <small>(optional)</small></span><textarea id="s-notes" name="notes" rows="3" placeholder="Questions, your main competitors, the best time to reach you..."></textarea></label>
+    <p class="form-note">Nothing is charged yet. We'll confirm the details and send a secure payment link, usually within one business day. See our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p>
+    <label class="check" for="s-news"><input id="s-news" name="newsletter" type="checkbox" value="yes"><span>Yes, send me occasional emails from Kestrel about getting found in AI search. I can unsubscribe at any time.</span></label>
+    <div><button class="btn go" type="submit">Send my sign-up</button></div>
+    <p class="status" role="status" aria-live="polite"></p>
+  </form>
+  <div class="signup-done" hidden>
+    <p class="done-mark" aria-hidden="true">&#10003;</p>
+    <h3>Thanks, you're signed up.</h3>
+    <p>We've emailed a confirmation to <b data-done-email></b>. We'll be in touch shortly, usually within one business day, with your payment link and next steps.</p>
+    <p>Didn't get the email? Check your spam folder, or write to <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a>.</p>
+    <div><button type="button" class="btn line" data-close>Close</button></div>
+  </div>
+</dialog>
+<script src="/assets/k.js?v=20261110d"></script>
+<script src="/assets/pricing.js?v=20261110d" defer></script>
 </body>
 </html>
