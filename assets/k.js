@@ -74,7 +74,64 @@ var KESTREL_AREA_MSG = { local: 'Add the town or city you serve.', region: 'Add 
   var FAIL = 'That didn’t go through. Please try again, or email info@askkestrel.ca and we’ll sign you up from there.';
   var area = kestrelArea(form);
 
+  /* The same business types and towns as the pricing page, so a sign-up can
+     hold its spot (business type + home area) as soon as the client is created. */
+  var lists = null;
+  function norm(v) { return String(v || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function stem(v) { return norm(v).split(' ').map(function (w) { return w.replace(/(ies)$/, 'y').replace(/(ses|xes|ches|shes)$/, function (m) { return m.slice(0, -2); }).replace(/s$/, ''); }).join(' '); }
+  function fill(id, values) {
+    var dl = document.getElementById(id); if (!dl) return;
+    var html = ''; values.forEach(function (v) { html += '<option value="' + v.replace(/"/g, '&quot;') + '">'; });
+    dl.innerHTML = html;
+  }
+  function placeLabel(p) { return p[1] + ', ' + p[2]; }
+  function syncPlaces() {
+    if (!lists) return;
+    if (area() === 'region') fill('k-places', Object.keys(lists.pt).map(function (k) { return lists.pt[k]; }).sort());
+    else fill('k-places', lists.byPop.map(placeLabel));
+  }
+  function loadLists() {
+    if (lists) return;
+    lists = 'loading';
+    Promise.all([
+      fetch('/assets/map/business-types.json').then(function (r) { return r.json(); }),
+      fetch('/assets/map/index.json').then(function (r) { return r.json(); })
+    ]).then(function (res) {
+      lists = { types: res[0], pt: res[1].pt, places: res[1].places };
+      lists.byPop = lists.places.slice().sort(function (a, b) { return (b[4] || 0) - (a[4] || 0); });
+      fill('k-types', lists.types.map(function (t) { return t.name; }));
+      syncPlaces();
+    }).catch(function () { lists = null; });
+  }
+  form.querySelectorAll('input[name="scope"]').forEach(function (r) { r.addEventListener('change', syncPlaces); });
+  function matchType(v) {
+    if (!lists || !lists.types) return null;
+    var n = norm(v), s = stem(v); if (!n) return null;
+    var hit = lists.types.find(function (t) { return norm(t.name) === n; }) ||
+              lists.types.find(function (t) { return stem(t.name) === s; });
+    if (hit) return hit;
+    var starts = lists.types.filter(function (t) { return stem(t.name).indexOf(s + ' ') === 0; });
+    return starts.length === 1 ? starts[0] : null;
+  }
+  function matchArea(scope, v) {
+    if (!lists || !lists.places) return null;
+    if (scope === 'national') return { id: 'CANADA', name: 'Canada-wide', pt: 'CA', tier: 'w' };
+    var n = norm(v); if (!n) return null;
+    if (scope === 'region') {
+      var code = Object.keys(lists.pt).find(function (k) { return norm(lists.pt[k]) === n || norm(k) === n; });
+      return code ? { id: 'PROV' + code, name: lists.pt[code] + '-wide', pt: code, tier: 'w' } : null;
+    }
+    var p = lists.byPop.find(function (x) { return norm(placeLabel(x)) === n; });
+    if (!p) {
+      // A bare town name only counts when it's unique (Richmond is in BC and Quebec).
+      var same = lists.byPop.filter(function (x) { return norm(x[1]).replace(/ toronto$/, '') === n || norm(x[1]) === n; });
+      if (same.length === 1) p = same[0];
+    }
+    return p ? { id: p[0], name: p[1], pt: p[2], tier: p[3] } : null;
+  }
+
   function open(plan) {
+    loadLists();
     form.hidden = false; done.hidden = true; say('');
     var radio = form.querySelector('input[name="plan"][value="' + plan + '"]');
     if (radio) radio.checked = true;
@@ -105,6 +162,10 @@ var KESTREL_AREA_MSG = { local: 'Add the town or city you serve.', region: 'Add 
     var data = new URLSearchParams();
     new FormData(form).forEach(function (v, k) { data.append(k, v); });
     if (!data.has('newsletter')) data.append('newsletter', 'no');
+    var t = matchType(data.get('business_type'));
+    if (t) data.set('spot_type', t.id);
+    var a = matchArea(area(), data.get('town'));
+    if (a) { data.set('area_id', a.id); data.set('area_name', a.name); data.set('area_province', a.pt); data.set('area_tier', a.tier); }
     kestrelAreaData(area(), data);
     btn.disabled = true; say('Sending...');
     fetch(ENDPOINT, { method: 'POST', body: data })

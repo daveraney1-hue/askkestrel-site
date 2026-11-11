@@ -394,8 +394,9 @@
       <label><input type="radio" name="scope" value="national"><span><b>All of Canada</b><small>Online or national businesses</small></span></label>
     </fieldset>
     <div class="row">
-      <label for="s-town"><span data-area-label>Town or city you serve</span><input id="s-town" name="town" autocomplete="address-level2" placeholder="e.g. Orangeville" required></label>
-      <label for="s-type">Type of business<input id="s-type" name="business_type" placeholder="e.g. family lawyer"></label>
+      <label for="s-town"><span data-area-label>Town or city you serve</span><input id="s-town" name="town" list="k-places" autocomplete="address-level2" placeholder="e.g. Orangeville" required></label>
+      <label for="s-type">Type of business<input id="s-type" name="business_type" list="k-types" autocomplete="off" placeholder="Start typing, e.g. Family lawyers"></label>
+      <datalist id="k-places"></datalist><datalist id="k-types"></datalist>
     </div>
     <label for="s-site"><span>Website <small>(optional)</small></span><input id="s-site" name="website" type="url" autocomplete="url" placeholder="https://"></label>
     <label for="s-notes"><span>Anything we should know? <small>(optional)</small></span><textarea id="s-notes" name="notes" rows="3" placeholder="Questions, your main competitors, the best time to reach you..."></textarea></label>
@@ -430,6 +431,6 @@
     <p>&copy; 2026 Kestrel AI Search, an AI visibility service from <a href="https://rootedworksco.ca/">Rooted Works Co.</a></p>
   </div>
 </footer>
-<script src="/assets/k.js"></script>
+<script src="/assets/k.js?v=20261110c"></script>
 </body>
 </html>
