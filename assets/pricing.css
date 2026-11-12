@@ -146,3 +146,10 @@ button.linkish{border:0; background:none; padding:0; margin-top:6px; color:var(-
 .ord-actions .status{margin:0}
 .order-sum{background:var(--sky); border-radius:12px; padding:12px 14px; font-weight:600; margin:0 0 4px}
 @media (max-width:860px){.ord-body{grid-template-columns:minmax(0, 1fr)} .order{padding:22px 18px}}
+.ord-qty{display:flex; align-items:center; gap:12px; margin:10px 0 4px}
+.ord-qty .qty-btn{width:40px; height:40px; border-radius:999px; border:1px solid var(--line); background:#fff; font:600 22px/1 var(--body, inherit); color:var(--ink); cursor:pointer; display:grid; place-items:center; padding:0}
+.ord-qty .qty-btn:hover:not(:disabled){border-color:var(--rufous); color:var(--rufous)}
+.ord-qty .qty-btn:focus-visible{outline:2px solid var(--rufous); outline-offset:2px}
+.ord-qty .qty-btn:disabled{opacity:.4; cursor:not-allowed}
+.ord-qty .qty-val{font-size:16px; color:var(--ink); min-width:150px; text-align:center}
+.ord-qty .qty-val b{font-size:20px; margin-right:4px}

@@ -23,6 +23,11 @@ const ABBR = { NL: 'N.L.', PE: 'P.E.I.', NS: 'N.S.', NB: 'N.B.', QC: 'Que.', ON:
 const PROV_OF_CODE = { 10: 'NL', 11: 'PE', 12: 'NS', 13: 'NB', 24: 'QC', 35: 'ON', 46: 'MB', 47: 'SK', 48: 'AB', 59: 'BC', 60: 'YT', 61: 'NT', 62: 'NU' };
 const PLANS = { track: 'Track', fix_track: 'Fix & Track', grow: 'Grow' };
 const MAX_EXTRAS = 10;
+// Extra questions: $10 a month each, on any plan. Track tops out at 6 questions;
+// more than 10 extras on Fix & Track or Grow is by email.
+const QUESTION_PRICE = 10;
+const INCLUDED_Q = { track: 3, fix_track: 3, grow: 10 };
+const MAX_XQ = { track: 3, fix_track: 10, grow: 10 };
 
 const root = document.querySelector('[data-pricing-map]');
 if (root) init(root);
@@ -84,7 +89,7 @@ function init(root) {
   const provData = {};           // 'ON' -> { fc, byId, nb: { id: [neighbour props] } }
   let path = null;               // current geoPath
 
-  const order = { plan: startPlan(), home: null, extras: [] };
+  const order = { plan: startPlan(), home: null, extras: [], xq: 0 };
 
   const zoomer = zoom().scaleExtent([1, 60]).on('zoom', (e) => g.attr('transform', e.transform));
   svg.call(zoomer).on('dblclick.zoom', null);
@@ -317,6 +322,8 @@ function init(root) {
     return TIERS[order.home.r].fix;
   }
   const extrasCounted = () => (holdsSpots() && order.home && !isWide(order.home) ? order.extras : []);
+  const xqCounted = () => Math.min(order.xq, MAX_XQ[order.plan]);
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
   function renderOrder() {
     if (!orderBox) return;
@@ -324,16 +331,18 @@ function init(root) {
     const body = orderBox.querySelector('[data-order-body]');
     body.innerHTML = '';
 
+    let stepNo = 0;
+    const stepTitle = (t) => `${++stepNo}. ${t}`;
     // 1. Business type
     const s1 = el('div', { class: 'ord-step' });
-    s1.append(el('h4', {}, '1. Your type of business'));
+    s1.append(el('h4', {}, stepTitle('Your type of business')));
     if (btype && typeById[btype]) s1.append(el('p', { class: 'ord-val' }, typeById[btype].name));
     else s1.append(el('p', { class: 'ord-need' }, 'Choose it in the “Your type of business” box above the map.'));
     body.append(s1);
 
     // 2. Home area
     const s2 = el('div', { class: 'ord-step' });
-    s2.append(el('h4', {}, '2. Your home area'));
+    s2.append(el('h4', {}, stepTitle('Your home area')));
     if (order.home) {
       const h = order.home;
       const line = el('p', { class: 'ord-val' });
@@ -366,7 +375,7 @@ function init(root) {
     // 3. Extra areas (Fix & Track and Grow)
     if (order.home && !isWide(order.home)) {
       const s3 = el('div', { class: 'ord-step' });
-      s3.append(el('h4', {}, '3. Extra areas (optional)'));
+      s3.append(el('h4', {}, stepTitle('Extra areas (optional)')));
       if (!holdsSpots()) {
         s3.append(el('p', { class: 'ord-note' }, 'Track covers your home area. To track and work on more areas, choose Fix & Track or Grow.'));
       } else {
@@ -401,23 +410,54 @@ function init(root) {
       body.append(s3);
     }
 
-    // 4. Total
+    // Extra questions (any plan)
+    if (order.home) {
+      const sq = el('div', { class: 'ord-step' });
+      sq.append(el('h4', {}, stepTitle('Extra questions (optional)')));
+      const inc = INCLUDED_Q[order.plan];
+      const max = MAX_XQ[order.plan];
+      order.xq = Math.min(order.xq, max);
+      sq.append(el('p', { class: 'ord-note' }, `${PLANS[order.plan]} includes ${inc} questions a month. Want us to track more of the questions your customers ask? Add more for $${QUESTION_PRICE} a month each` + (order.plan === 'track' ? ', up to 6 questions in all.' : '. Extra questions are asked about your home area.')));
+      const row = el('div', { class: 'ord-qty' });
+      const minus = el('button', { type: 'button', class: 'qty-btn', 'aria-label': 'One fewer extra question' }, '−');
+      const plus = el('button', { type: 'button', class: 'qty-btn', 'aria-label': 'One more extra question' }, '+');
+      const shown = el('span', { class: 'qty-val', 'aria-live': 'polite' });
+      shown.append(el('b', {}, String(order.xq)), document.createTextNode(order.xq === 1 ? ' extra question' : ' extra questions'));
+      minus.disabled = order.xq <= 0;
+      plus.disabled = order.xq >= max;
+      minus.addEventListener('click', () => { order.xq = Math.max(0, order.xq - 1); renderOrder(); orderBox.querySelector('.qty-btn').focus(); });
+      plus.addEventListener('click', () => { order.xq = Math.min(max, order.xq + 1); renderOrder(); const b = orderBox.querySelectorAll('.qty-btn')[1]; (b.disabled ? orderBox.querySelector('.qty-btn') : b).focus(); });
+      row.append(minus, shown, plus);
+      sq.append(row);
+      sq.append(el('p', { class: 'ord-note' }, `${plural(inc + order.xq, 'question', 'questions')} a month in all.` + (order.xq >= max ? (order.plan === 'track' ? ' Need more than 6? Choose Fix & Track or Grow.' : ' Need more? Email info@askkestrel.ca.') : '')));
+      body.append(sq);
+    }
+
+    // Total
     const s4 = el('div', { class: 'ord-step ord-total' });
-    s4.append(el('h4', {}, order.home && !isWide(order.home) ? '4. Your monthly price' : 'Your monthly price'));
+    s4.append(el('h4', {}, order.home ? stepTitle('Your monthly price') : 'Your monthly price'));
     const lines = el('dl');
     const add = (k, v) => { const d = el('div'); d.append(el('dt', {}, k), el('dd', {}, v)); lines.append(d); };
     if (!order.home) {
       s4.append(el('p', { class: 'ord-note' }, 'Choose your home area to see your price.'));
     } else if (order.plan === 'track') {
       add('Track', `$${TRACK_PRICE} a month`);
+      const xq = xqCounted();
+      if (xq) {
+        add(`+ ${plural(xq, 'extra question', 'extra questions')}`, `$${xq * QUESTION_PRICE} a month`);
+        add('Total', `${money(TRACK_PRICE + xq * QUESTION_PRICE)} a month`);
+      }
       s4.append(lines);
+      s4.append(el('p', { class: 'ord-note' }, 'Prices before tax.'));
     } else {
       const hp = homePrice();
       add(`${PLANS[order.plan]}, ${order.home.n}`, hp == null ? 'Custom quote' : `$${hp} a month`);
       let extra = 0;
       extrasCounted().forEach((x) => { extra += TIERS[x.r].add; add(`+ ${x.n}`, `$${TIERS[x.r].add} a month`); });
+      const xq = xqCounted();
+      if (xq) { extra += xq * QUESTION_PRICE; add(`+ ${plural(xq, 'extra question', 'extra questions')}`, `$${xq * QUESTION_PRICE} a month`); }
       if (hp != null) add('Total', `${money(hp + extra)} a month`);
-      else if (extra) add('Extra areas', `+${money(extra)} a month on top of your quote`);
+      else if (extra) add('Add-ons', `+${money(extra)} a month on top of your quote`);
       s4.append(lines);
       if (order.plan === 'fix_track') s4.append(el('p', { class: 'ord-note' }, 'Plus a one-time setup fee, quoted once we’ve looked at what you need. Prices before tax.'));
       else s4.append(el('p', { class: 'ord-note' }, 'We’ll quote Grow after a short call about your business. Prices before tax.'));
@@ -440,8 +480,10 @@ function init(root) {
     const ex = extrasCounted();
     let s = `${PLANS[order.plan]} for ${typeById[btype].name.toLowerCase()} in ${where}`;
     if (ex.length) s += `, plus ${ex.map((x) => x.n).join(', ')}`;
+    const xq = xqCounted();
+    if (xq) s += `, with ${plural(xq, 'extra question', 'extra questions')} (${INCLUDED_Q[order.plan] + xq} in all)`;
     const hp = homePrice();
-    const total = hp == null ? null : hp + ex.reduce((n, x) => n + TIERS[x.r].add, 0);
+    const total = hp == null ? null : hp + ex.reduce((n, x) => n + TIERS[x.r].add, 0) + xq * QUESTION_PRICE;
     return s + (total == null ? ' (custom quote).' : `: ${money(total)} a month${order.plan === 'fix_track' ? ' plus setup' : ''}.`);
   }
 
@@ -498,6 +540,7 @@ function init(root) {
       data.set('scope', h.id === 'CANADA' ? 'national' : isWide(h) ? 'region' : 'local');
       data.set('town', h.id === 'CANADA' ? 'Canada' : isWide(h) ? provName[h.pt] : townName(h));
       data.set('area_id', h.id); data.set('area_name', h.n); data.set('area_province', h.pt); data.set('area_tier', h.r);
+      data.set('extra_questions', String(xqCounted()));
       data.set('extra_areas', JSON.stringify(extrasCounted().map((x) => ({ id: x.id, name: x.n, province: x.pt, tier: x.r }))));
       data.set('summary', orderSummary());
       const btn = form.querySelector('button[type="submit"]');
