@@ -352,7 +352,26 @@ function init(root) {
       if (!isWide(h)) line.append(el('span', { class: 'ord-tier ' + TIERS[h.r].cls }, TIERS[h.r].name));
       s2.append(line);
       if (isWide(h)) s2.append(el('p', { class: 'ord-note' }, 'Province-wide and Canada-wide plans are quoted for your business, because you hold a spot in every area they cover.'));
-      else if (holdsSpots() && isFull(h)) s2.append(el('p', { class: 'ord-warn' }, `${h.n} is full for your business type on Fix & Track and Grow. You can join the waitlist and we’ll contact you when a spot opens, in the order people joined. Or choose Track, or another home area.`));
+      else if (holdsSpots() && isFull(h)) {
+        s2.append(el('p', { class: 'ord-warn' }, `${h.n} is full for your business type on Fix & Track and Grow. Join the waitlist and we’ll contact you when a spot opens, in the order people joined. Nothing is charged. Or start with Track now, which has no limit.`));
+        const choices = el('div', { class: 'ord-choices' });
+        const join = el('button', { type: 'button', class: 'btn go' }, 'Join the waitlist');
+        join.addEventListener('click', () => {
+          const problem = orderProblem();
+          if (problem) { alertOrder(problem); return; }
+          alertOrder('');
+          openDialog();
+        });
+        const track = el('button', { type: 'button', class: 'btn line' }, 'Choose Track instead');
+        track.addEventListener('click', () => {
+          order.plan = 'track';
+          if (orderBox) orderBox.querySelectorAll('input[name="order-plan"]').forEach((r) => { r.checked = r.value === 'track'; });
+          alertOrder('');
+          refresh();
+        });
+        choices.append(join, track);
+        s2.append(choices);
+      }
       const change = el('button', { type: 'button', class: 'linkish' }, 'Change');
       change.addEventListener('click', () => { order.home = null; order.extras = []; refresh(); placeInput.focus(); });
       s2.append(change);
