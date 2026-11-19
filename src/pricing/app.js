@@ -201,6 +201,8 @@ function init(root) {
   const spotsLeft = (id) => Math.max(0, SPOTS - used(id));
   const holdsSpots = () => order.plan !== 'track';
   const isFull = (a) => !isWide(a) && taken && btype && spotsLeft(a.id) === 0;
+  // A Fix & Track or Grow sign-up for a full home area joins the waitlist instead.
+  const waitlisted = () => holdsSpots() && !!order.home && isFull(order.home);
 
   function paint() {
     const homeId = order.home && order.home.id;
@@ -227,7 +229,7 @@ function init(root) {
     p.append(dots, document.createTextNode(' '), el('b', {}, left === 0 ? 'Full' : `${left} of ${SPOTS} spots open`),
       document.createTextNode(` for ${name.toLowerCase()} on Fix & Track and Grow.`));
     box.append(p);
-    if (left === 0) box.append(el('p', { class: 'small' }, 'You can still start with Track, and we’ll let you know if a spot opens.'));
+    if (left === 0) box.append(el('p', { class: 'small' }, 'You can join the waitlist for Fix & Track or Grow, and we’ll contact you when a spot opens. Or start with Track now.'));
   }
 
   function renderCard() {
@@ -350,7 +352,7 @@ function init(root) {
       if (!isWide(h)) line.append(el('span', { class: 'ord-tier ' + TIERS[h.r].cls }, TIERS[h.r].name));
       s2.append(line);
       if (isWide(h)) s2.append(el('p', { class: 'ord-note' }, 'Province-wide and Canada-wide plans are quoted for your business, because you hold a spot in every area they cover.'));
-      else if (holdsSpots() && isFull(h)) s2.append(el('p', { class: 'ord-warn' }, `${h.n} is full for your business type on Fix & Track and Grow. Choose Track, or another home area.`));
+      else if (holdsSpots() && isFull(h)) s2.append(el('p', { class: 'ord-warn' }, `${h.n} is full for your business type on Fix & Track and Grow. You can join the waitlist and we’ll contact you when a spot opens, in the order people joined. Or choose Track, or another home area.`));
       const change = el('button', { type: 'button', class: 'linkish' }, 'Change');
       change.addEventListener('click', () => { order.home = null; order.extras = []; refresh(); placeInput.focus(); });
       s2.append(change);
@@ -468,7 +470,6 @@ function init(root) {
   function orderProblem() {
     if (!btype) return 'Choose your type of business in the box above the map.';
     if (!order.home) return 'Choose your home area on the map, or search for your town.';
-    if (holdsSpots() && isFull(order.home)) return `${order.home.n} is full for your business type on ${PLANS[order.plan]}. Choose Track, or another home area.`;
     const fullExtra = extrasCounted().find((x) => isFull(x));
     if (fullExtra) return `${fullExtra.n} is full for your business type. Untick it to continue.`;
     return '';
@@ -498,6 +499,48 @@ function init(root) {
   }
 
   /* ---------- The sign-up dialog: contact details only ---------- */
+  // Track: pay online straight away. Fix & Track and Grow: a short consultation first,
+  // then a payment link. A full home area on Fix & Track or Grow: the waitlist.
+  function nextStep() {
+    if (waitlisted()) return 'waitlist';
+    return order.plan === 'track' ? 'pay' : 'consult';
+  }
+  function setNextText() {
+    const step = nextStep();
+    const h = order.home;
+    const typeName = btype && typeById[btype] ? typeById[btype].name.toLowerCase() : 'your business type';
+    const note = dlg.querySelector('[data-next-note]');
+    const btn = form.querySelector('[data-submit-label]');
+    const head = dlg.querySelector('#signup-h');
+    if (step === 'pay') {
+      head.textContent = 'Your details';
+      note.textContent = 'Next, you’ll pay securely by card on Stripe’s payment page. Your plan starts right away, and you can cancel at any time. Have a promo code? Enter it on the payment page.';
+      btn.textContent = 'Continue to payment';
+    } else if (step === 'consult') {
+      head.textContent = 'Book your consultation';
+      note.textContent = order.plan === 'fix_track'
+        ? 'Nothing is charged now. We’ll contact you within one business day to book a short consultation about your business. After it, we’ll send your setup fee quote and a secure payment link.'
+        : 'Nothing is charged now. We’ll contact you within one business day to book a short consultation about your business. After it, we’ll send your Grow quote and a secure payment link.';
+      btn.textContent = 'Request my consultation';
+    } else {
+      head.textContent = 'Join the waitlist';
+      note.textContent = `${h.n} is full for ${typeName} on Fix & Track and Grow. Join the waitlist and we’ll contact you as soon as a spot opens, in the order people joined. Nothing is charged.`;
+      btn.textContent = 'Join the waitlist';
+    }
+  }
+  function showDone(next, email) {
+    const t = {
+      consult: ['Thanks, we’ve got your request.', 'We’ve emailed a confirmation to', 'We’ll contact you within one business day to book your consultation.'],
+      waitlist: ['You’re on the waitlist.', 'We’ve emailed a confirmation to', 'We’ll contact you as soon as a spot opens for your business type in that area.'],
+      pay: ['Thanks, you’re signed up.', 'We’ve emailed your payment link to', 'Use it to finish signing up whenever you’re ready.'],
+    }[next] || ['Thanks, you’re signed up.', 'We’ve emailed a confirmation to', 'We’ll be in touch shortly, usually within one business day, with your next steps.'];
+    dlg.querySelector('[data-done-h]').textContent = t[0];
+    dlg.querySelector('[data-done-lead]').textContent = t[1];
+    dlg.querySelector('[data-done-email]').textContent = email;
+    dlg.querySelector('[data-done-next]').textContent = t[2];
+    form.reset(); form.hidden = true; dlg.querySelector('.signup-done').hidden = false;
+    dlg.querySelector('.signup-done [data-close]').focus();
+  }
   const dlg = document.getElementById('signup');
   const form = dlg && dlg.querySelector('form[data-signup]');
   function openDialog() {
@@ -505,6 +548,7 @@ function init(root) {
     form.hidden = false;
     dlg.querySelector('.signup-done').hidden = true;
     dlg.querySelector('[data-order-sum]').textContent = orderSummary();
+    setNextText();
     say('');
     if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
     form.querySelector('[name="name"]').focus();
@@ -543,21 +587,27 @@ function init(root) {
       data.set('extra_questions', String(xqCounted()));
       data.set('extra_areas', JSON.stringify(extrasCounted().map((x) => ({ id: x.id, name: x.n, province: x.pt, tier: x.r }))));
       data.set('summary', orderSummary());
+      data.set('next_step', nextStep());
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true; say('Sending...');
+      let leaving = false;
       fetch(SIGNUP_URL, { method: 'POST', body: data })
         .then((r) => r.json().then((j) => ({ okay: r.ok, j })))
         .then((res) => {
           if (res.okay && res.j && res.j.ok) {
-            dlg.querySelector('[data-done-email]').textContent = email.value.trim();
-            if (typeof gtag === 'function') gtag('event', 'sign_up', { method: order.plan });
-            form.reset(); form.hidden = true; dlg.querySelector('.signup-done').hidden = false;
-            dlg.querySelector('.signup-done [data-close]').focus();
+            if (typeof gtag === 'function') gtag('event', 'sign_up', { method: order.plan, next: res.j.next || '' });
+            if (res.j.pay_url && /^https:\/\/(buy|checkout)\.stripe\.com\//.test(res.j.pay_url)) {
+              leaving = true;
+              say('Taking you to secure payment...', 'ok');
+              window.location.href = res.j.pay_url;
+              return;
+            }
+            showDone(res.j.next, email.value.trim());
           } else if (res.j && res.j.error) say(res.j.error, 'err');
           else say(FAIL, 'err');
         })
         .catch(() => say(FAIL, 'err'))
-        .then(() => { btn.disabled = false; });
+        .then(() => { if (!leaving) btn.disabled = false; });
     });
   }
 
