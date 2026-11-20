@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your proposal | Kestrel</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<style>
+body{margin:0;background:#E8EEF0;color:#17232B;font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:16px}
+img{height:40px;width:auto}
+p{color:#52636C;margin:14px 0 0}
+a{color:#22343F}
+</style>
+</head>
+<body>
+<main>
+  <img src="/assets/kestrel-mark.webp" width="159" height="120" alt="Kestrel">
+  <p id="msg">Loading your proposal&hellip;</p>
+  <noscript><p>Your browser has JavaScript turned off. Email <a href="mailto:dave@askkestrel.ca">dave@askkestrel.ca</a> for a copy of your proposal.</p></noscript>
+</main>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var t = (q.get('t') || '').replace(/[^a-f0-9]/gi, '').slice(0, 64);
+  var msg = document.getElementById('msg');
+  function fail(text) { msg.innerHTML = text + ' Email <a href="mailto:dave@askkestrel.ca">dave@askkestrel.ca</a> and Dave will send you a copy.'; }
+  if (!t) { fail('This proposal link is missing its code.'); return; }
+  var url = 'https://automation.rootedai.ca/webhook/kestrel-proposal?t=' + encodeURIComponent(t) + (q.get('preview') === '1' ? '&preview=1' : '');
+  fetch(url)
+    .then(function (r) { return r.text(); })
+    .then(function (html) {
+      if (!html || html.indexOf('<html') === -1) { fail('This proposal couldn’t be loaded.'); return; }
+      document.open(); document.write(html); document.close();
+    })
+    .catch(function () { fail('This proposal couldn’t be loaded right now. Try again in a minute.'); });
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /report/
+Disallow: /proposal/
 
 Sitemap: https://askkestrel.ca/sitemap.xml
