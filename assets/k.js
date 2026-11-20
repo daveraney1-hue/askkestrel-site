@@ -24,6 +24,32 @@ function kestrelAreaData(scope, data) {
 }
 var KESTREL_AREA_MSG = { local: 'Add the town or city you serve.', region: 'Add the region or province you serve.' };
 
+/* Where a visitor came from: the utm_ tags on the link they arrived by (e.g. the postcard QR code,
+   utm_source=postcard&utm_campaign=stat). Kept for 30 days in this browser, first visit wins,
+   and sent with the free check request so Dave sees it in the Telegram approval. */
+var kestrelSource = (function () {
+  var KEY = 'kestrel_src', DAYS = 30;
+  function read() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (s && Date.now() - s.t < DAYS * 864e5) return s;
+    } catch (e) {}
+    return null;
+  }
+  try {
+    var p = new URLSearchParams(location.search), got = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) {
+      var v = p.get(k); if (v) got[k] = v.slice(0, 80);
+    });
+    if (got.utm_source && !read()) { got.t = Date.now(); localStorage.setItem(KEY, JSON.stringify(got)); }
+  } catch (e) {}
+  return function (data) {
+    var s = read();
+    if (!s) return;
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) { if (s[k]) data.set(k, s[k]); });
+  };
+})();
+
 /* Free check form: sends the request to Kestrel, where Dave approves it and the report is emailed. */
 (function () {
   var ENDPOINT = 'https://automation.rootedai.ca/webhook/kestrel-check-request';
@@ -47,6 +73,7 @@ var KESTREL_AREA_MSG = { local: 'Add the town or city you serve.', region: 'Add 
     new FormData(form).forEach(function (v, k) { data.append(k, v); });
     if (!data.has('newsletter')) data.append('newsletter', 'no');
     kestrelAreaData(area(), data);
+    kestrelSource(data);
     btn.disabled = true; say('Sending...');
     fetch(ENDPOINT, { method: 'POST', body: data })
       .then(function (r) { return r.json().then(function (j) { return { okay: r.ok, j: j }; }); })
