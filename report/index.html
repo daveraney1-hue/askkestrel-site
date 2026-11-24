@@ -11,27 +11,46 @@ body{margin:0;background:#E8EEF0;color:#17232B;font:17px/1.6 system-ui,-apple-sy
 img{height:40px;width:auto}
 p{color:#52636C;margin:14px 0 0}
 a{color:#22343F}
+h1{font-size:24px;line-height:1.3;margin:18px 0 0}
+main{max-width:440px}
+#go{margin-top:22px;background:#22343F;color:#fff;border:0;border-radius:8px;padding:14px 28px;font:600 17px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+#go:hover{background:#17232B}
+#go[hidden]{display:none}
+small{display:block;color:#52636C;font-size:14px;margin-top:14px}
 </style>
 </head>
 <body>
 <main>
   <img src="/assets/kestrel-mark.webp" width="159" height="120" alt="Kestrel">
-  <p id="msg">Loading your report&hellip;</p>
+  <h1>Your free AI visibility report</h1>
+  <p id="msg">See how ChatGPT, Gemini, Claude and Perplexity recommend you, and who they name instead.</p>
+  <button id="go" type="button">Open my report</button>
+  <small id="note">The first time it opens, it takes about a minute to run.</small>
   <noscript><p>Your browser has JavaScript turned off. <a id="nsl" href="https://askkestrel.ca/">Open askkestrel.ca</a> or email <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a> for a copy.</p></noscript>
 </main>
 <script>
+// The report only loads (and, the first time, runs) after a person clicks the button.
+// Email security scanners (Microsoft Safe Links and others) open every link in an email the moment it arrives;
+// loading automatically let them run reports nobody asked for and counted them as views.
 (function () {
   var id = (new URLSearchParams(location.search).get('id') || '').replace(/[^a-z0-9]/gi, '').slice(0, 40);
   var msg = document.getElementById('msg');
-  function fail(text) { msg.innerHTML = text + ' Email <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a> and we’ll send you a copy.'; }
-  if (!id) { fail('This report link is missing its code.'); return; }
-  fetch('https://automation.rootedai.ca/webhook/ai-report?id=' + encodeURIComponent(id))
-    .then(function (r) { return r.text(); })
-    .then(function (html) {
-      if (!html || html.indexOf('<html') === -1) { fail('This report couldn’t be loaded.'); return; }
-      document.open(); document.write(html); document.close();
-    })
-    .catch(function () { fail('This report couldn’t be loaded right now. Try again in a minute.'); });
+  var go = document.getElementById('go');
+  var note = document.getElementById('note');
+  function fail(text) { msg.innerHTML = text + ' Email <a href="mailto:info@askkestrel.ca">info@askkestrel.ca</a> and we’ll send you a copy.'; go.hidden = false; go.disabled = false; go.textContent = 'Try again'; }
+  if (!id) { note.hidden = true; fail('This report link is missing its code.'); go.hidden = true; return; }
+  go.addEventListener('click', function (e) {
+    if (!e.isTrusted) return;
+    go.disabled = true; go.hidden = true; note.hidden = true;
+    msg.textContent = 'Loading your report… If this is its first run, give it about a minute.';
+    fetch('https://automation.rootedai.ca/webhook/ai-report?id=' + encodeURIComponent(id))
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        if (!html || html.indexOf('<html') === -1) { fail('This report couldn’t be loaded.'); return; }
+        document.open(); document.write(html); document.close();
+      })
+      .catch(function () { fail('This report couldn’t be loaded right now. Try again in a minute.'); });
+  });
 })();
 </script>
 </body>
