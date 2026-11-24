@@ -48,6 +48,10 @@ small{display:block;color:#52636C;font-size:14px;margin-top:14px}
       .then(function (html) {
         if (!html || html.indexOf('<html') === -1) { fail('This report couldn’t be loaded.'); return; }
         document.open(); document.write(html); document.close();
+        // The report hasn't been made yet, so the system sent its "preparing" page with its own start button.
+        // The person already clicked once here, so start it for them instead of asking for a second click.
+        var b = document.getElementById('gobtn');
+        if (b) b.click();
       })
       .catch(function () { fail('This report couldn’t be loaded right now. Try again in a minute.'); });
   });
